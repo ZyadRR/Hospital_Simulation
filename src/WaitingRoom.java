@@ -22,16 +22,19 @@ public class WaitingRoom {
 
         if (!EmptyWaitingRoom.TryAcquire()) {
 
-            System.out.println("Waiting room is full!");
-            System.out.println(patient.getPatientName() + " is waiting outside.");
-
+           if (!patient.isNull()) {
+                System.out.println("The waiting room is full.");
+                System.out.println(patient.getPatientName() + " is waiting outside for an available seat.");
+            }
             EmptyWaitingRoom.Acquire();
         }
 
         mutex.Acquire();
         patients.add(patient);
 
-        System.out.println(patient.getPatientName() + " entered the waiting room.");
+        if (!patient.isNull()) {
+            System.out.println(patient.getPatientName() + " entered the waiting room.");
+        }
 
         mutex.Release();
 

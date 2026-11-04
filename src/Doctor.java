@@ -24,6 +24,9 @@ public class Doctor extends Thread {
 				if (patient == null) {
 					break;
 				}
+				if (patient.isNull()) {
+					break;
+				}
 				log("Doctor " + doctorid + " is assigned to P" + patient.getId());
 				log("Doctor " + doctorid + " is trying to acquire a treatment room");
 
@@ -46,6 +49,7 @@ public class Doctor extends Thread {
 				}
 				log("Doctor " + doctorid + " is now available.");
 				log("P" + patient.getId() + " left.");
+				Hospital.PatientFinished();
 			}
 
 		} catch (InterruptedException e) {

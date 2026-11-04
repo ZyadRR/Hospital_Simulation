@@ -41,7 +41,7 @@ class Semaphore {
         notifyAll();
     }
 
-    public int numberOfRooms() {
+    public synchronized int numberOfRooms() {
         return m_availablePermits;
     }
 }

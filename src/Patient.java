@@ -7,17 +7,31 @@ public class Patient extends Thread {
     private String name;
 
     private WaitingRoom waitingRoom;
-
+    private boolean m_isNull;
     public Patient(WaitingRoom waitingRoom) {
-
+        
         this.patientId = id;
         this.name = "P" + id;
-
         id++;
-
+        this.m_isNull = false;
         this.waitingRoom = waitingRoom;
     }
 
+    private Patient() {
+        this.patientId = -1;
+        this.name = "POISON";
+        this.waitingRoom = null;
+        this.m_isNull = true;
+    }
+
+    public static Patient createNull() {
+        return new Patient();
+    }
+
+    public boolean isNull() {
+        return m_isNull;
+    }
+    
     public long getId() {
         return patientId;
     }

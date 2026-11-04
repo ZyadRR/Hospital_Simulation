@@ -1,6 +1,35 @@
 import java.util.Scanner;
 
 public class Hospital {
+
+    private static int m_remainingPatients;
+    private static int m_doctorsCount;
+    private static WaitingRoom m_waitingRoom;
+
+    private static Semaphore m_completionLock = new Semaphore(1);
+
+    public static void PatientFinished() throws InterruptedException {
+        boolean finished = false;
+
+        m_completionLock.Acquire();
+        try {
+            m_remainingPatients--;
+
+            if (m_remainingPatients == 0) {
+                finished = true;
+            }
+        }
+        finally {
+            m_completionLock.Release();
+        }
+
+        if (finished) {
+            for (int i = 0; i < m_doctorsCount; i++) {
+                m_waitingRoom.addPatient(Patient.createNull());
+            }
+        }
+    }
+
     public static void main(String[] args) throws InterruptedException {
         Scanner scanner = new Scanner(System.in);
 
@@ -14,15 +43,20 @@ public class Hospital {
         int numPatients = scanner.nextInt();
         scanner.close();
 
+
         StringBuilder sb = new StringBuilder("Patients arriving:\n");
         Patient[] patients = new Patient[numPatients];
         for (int i = 1; i <= numPatients; i++) {
             sb.append("P").append(i).append(i == numPatients ? "" : " ");
         }
-        System.out.println(sb.toString().trim() + "\n");
+        System.out.println(sb.toString().trim());
 
         WaitingRoom waitingRoom = new WaitingRoom(waitingRoomCapacity);
         TreatmentRooms treatmentRooms = new TreatmentRooms(2);
+
+        m_remainingPatients = numPatients;
+        m_doctorsCount = numDoctors;
+        m_waitingRoom = waitingRoom;
 
         Thread[] doctorThreads = new Thread[numDoctors];
         for (int i = 1; i <= numDoctors; i++) {
@@ -38,9 +72,13 @@ public class Hospital {
             patientThreads[i - 1].start();
             Thread.sleep(200);
         }
+        
+        for (Thread patient : patientThreads) {
+            patient.join();
+        }
 
-        while (waitingRoom.numOfWR() < waitingRoomCapacity || treatmentRooms.numOfTR() < 2) {
-            Thread.sleep(1000);
+        for (Thread doctor : doctorThreads) {
+            doctor.join();
         }
 
         System.out.println("All patients have been treated.");
