@@ -42,7 +42,7 @@ public class Doctor {
                  treatmentRooms.releaseRoom();
                  log("Doctor " + doctorid + " released the treatment room.");
              }
-             log("Doctor " + id + " is now available.");
+             log("Doctor " + doctorid + " is now available.");
              log("P" + patient.getId() + " left.");
              waitingRoom.patientTreated();
          }
