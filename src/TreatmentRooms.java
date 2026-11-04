@@ -6,12 +6,15 @@ public class TreatmentRooms {
         rooms = new Semaphore(numberOfRooms);
     }
 
-
     public boolean tryAcquireRoom() throws InterruptedException {
         return rooms.TryAcquireIn(TIMEOUT_SECONDS);
     }
 
     public void releaseRoom() {
         rooms.Release();
+    }
+
+    public int numOfTR() {
+        return rooms.numberOfRooms();
     }
 }

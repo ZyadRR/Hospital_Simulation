@@ -18,7 +18,6 @@ public class WaitingRoom {
         mutex = new Semaphore(1);
     }
 
-  
     public void addPatient(Patient patient) throws InterruptedException {
 
         if (!EmptyWaitingRoom.TryAcquire()) {
@@ -28,7 +27,6 @@ public class WaitingRoom {
 
             EmptyWaitingRoom.Acquire();
         }
-
 
         mutex.Acquire();
         patients.add(patient);
@@ -40,16 +38,19 @@ public class WaitingRoom {
         fullWaitingRoom.Release();
     }
 
-
     public Patient removePatient() throws InterruptedException {
 
         fullWaitingRoom.Acquire();
         mutex.Acquire();
-        
+
         Patient patient = patients.remove();
 
         mutex.Release();
         EmptyWaitingRoom.Release();
         return patient;
+    }
+
+    public int numOfWR() {
+        return EmptyWaitingRoom.numberOfRooms();
     }
 }
