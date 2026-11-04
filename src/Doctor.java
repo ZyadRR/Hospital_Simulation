@@ -17,18 +17,18 @@ public class Doctor {
      try {
          while (true){
 
-             Patient patient = waitingRoom.takepatient();
+             Patient patient = waitingRoom.removePatient();
              if(patient==null){
                  break;
              }
-             log("Doctor "+doctorid+ " is assigned to P"+Patient.getid());
+             log("Doctor "+doctorid+ " is assigned to P"+ patient.getId());
              log("Doctor "+doctorid+" is trying to acquire a treatment room");
 
              boolean acquired = treatmentRooms.tryAcquireRoom();
              if(!acquired){
                  log("Doctor " + doctorid + " could not acquire a treatment room.");
                  log("Doctor " + doctorid + " is sending P" + patient.getId() + " back to the waiting room.");
-                 waitingRoom.returnPatient(patient);
+                 waitingRoom.addPatient(patient);
                  log("Doctor " + doctorid + " is now available.");
                  continue;
              }
@@ -44,7 +44,7 @@ public class Doctor {
              }
              log("Doctor " + doctorid + " is now available.");
              log("P" + patient.getId() + " left.");
-             waitingRoom.patientTreated();
+             waitingRoom.removePatient();
          }
 
      }
