@@ -43,7 +43,10 @@ public class Hospital {
         int numPatients = scanner.nextInt();
         scanner.close();
 
-
+        if (waitingRoomCapacity < 1 || numDoctors < 1 || numPatients < 1) {
+            System.out.println("All values must be at least 1.");
+            return;
+        }
         StringBuilder sb = new StringBuilder("Patients arriving:\n");
         Patient[] patients = new Patient[numPatients];
         for (int i = 1; i <= numPatients; i++) {
